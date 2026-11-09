@@ -1,0 +1,28 @@
+<!doctype html>
+<html lang="pt-BR">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="referrer" content="no-referrer">
+  <title>Retorno do login</title>
+  <style>body{font-family:system-ui,sans-serif;max-width:32rem;margin:4rem auto;padding:0 1rem;color:#0f172a}</style>
+</head>
+<body>
+  <h3>Concluindo o login…</h3>
+  <p id="msg">Você será redirecionado para o aplicativo Controller neste computador.</p>
+  <script>
+    // Repassa o retorno do OAuth para o app local. Destino FIXO (não é redirecionador aberto):
+    // só encaminha os parâmetros que o OAuth define, e somente para o próprio computador.
+    var TARGET = 'http://localhost:8765/callback';
+    var src = new URLSearchParams(location.search), out = new URLSearchParams();
+    ['code', 'state', 'error', 'error_description'].forEach(function (k) {
+      if (src.has(k)) out.set(k, src.get(k));
+    });
+    if (out.has('code') || out.has('error')) {
+      location.replace(TARGET + '?' + out.toString());
+    } else {
+      document.getElementById('msg').textContent = 'Nenhum retorno de login recebido. Inicie a conexão pelo aplicativo.';
+    }
+  </script>
+</body>
+</html>
